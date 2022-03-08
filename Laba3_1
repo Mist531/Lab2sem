@@ -1,0 +1,130 @@
+#include <iostream>
+#include <iso646.h>
+#include <windows.h>
+#include <vector>
+#include <string>
+using namespace std;
+class List
+{
+protected:
+    double Length;
+    double Width;
+    double Thickness;
+    double Density = 7.9;
+    double Weight;
+    double Area;
+    string Type;
+public:
+    List(double Length1,double Width1,double Thickness1,double Density1,double Weight1,double Area1, string Type1):
+    Length(Length1), Width(Width1), Thickness(Thickness1), Density(Density1), Weight(Weight1), Area(Area1), Type(Type1)
+    {}
+    List() = default;
+    virtual double Area1() = 0;
+    double AreaFull(){
+        return Area;
+    }
+    double WeightM(){
+        Weight = Density * Area * (Length / 100);
+        return Weight;
+    }
+    void VivodInf(){
+        cout<<"Тип листа = "<<Type<<endl;
+        if (Type == "Треугольник"){
+            cout << "     Катет 1 (мм)= " << Length << endl;
+            cout << "     Катет 2 (мм)= " << Width << endl;
+        }
+        else {
+            cout << "     Длинна (мм)= " << Length << endl;
+            cout << "     Ширина (мм)= " << Width << endl;
+        }
+        cout<<"     Толщина (мм)= "<<Thickness<<endl;
+        cout<<"     Плотность (кг/м^3)= "<<Density<<endl;
+        cout<<"     Вес (кг)= "<<Weight<<endl;
+        cout<<"     Площадь (м^3)= "<<Area<<endl;
+    }
+};
+class Construct:public List{
+public:
+    Construct(double Length1,double Width1,double Thickness1,double Density1,double Weight1,double Area1, string Type1):
+            List(Length1,Width1,Thickness1, Density1, Weight1,Area1,Type1){
+    }
+    double Area1() override {
+    }
+
+};
+class Square:public List {
+public:
+    Square(int Size, int Count, vector<List*>& Lists) {
+        for (int i = 0; i < Count; ++i) {
+            Length = Size * 100+ rand() % 20+2;//мм
+            Width = Length;//мм
+            Thickness = rand() % 20+2;//мм
+            Area = Area1();//м3
+            Weight = WeightM();
+            Type = "Квадрат";
+            Construct* Square1 = new Construct(Length, Width, Thickness, Density, Weight, Area, Type);
+            Lists.push_back(Square1);
+        }
+    }
+    double Area1() override {
+        Area = (Length/100) * (Width/100);
+        return Area;
+    }
+};
+
+class Rectangle:public List {
+public:
+    Rectangle(int Size, int Count, vector<List*>& Lists) {
+        for (int i = 0; i < Count; ++i) {
+            Length = Size * 100+ rand() % 20+2;//мм
+            Width = Size * 100+ rand() % 20+2;//мм
+            Thickness = rand() % 20+2;//мм
+            Area = Area1();//м3
+            Weight = WeightM();
+            Type = "Прямоугольник";
+            Construct* Square12 = new Construct(Length, Width, Thickness, Density, Weight, Area, Type);
+            Lists.push_back(Square12);
+        }
+    }
+    double Area1() override {
+        Area = (Length/100) * (Width/100);
+        return Area;
+    }
+};
+
+class Triangle:public List {
+public:
+    Triangle(int Size, int Count, vector<List*>& Lists) {
+        for (int i = 0; i < Count; ++i) {
+            Length = Size * 100+ rand() % 20+2;//мм
+            Width = Size * 100+ rand() % 20+2;//мм
+            Thickness = rand() % 20+2;//мм
+            Area = Area1();//м3
+            Weight = WeightM();
+            Type = "Треугольник";
+            Construct* Square12 = new Construct(Length, Width, Thickness, Density, Weight, Area, Type);
+            Lists.push_back(Square12);
+        }
+    }
+    double Area1() override {
+        Area = ((Length/100) * (Width/100))/2;
+        return Area;
+    }
+};
+int main()
+{
+    SetConsoleOutputCP(CP_UTF8);
+    vector<List*> Lists;
+    srand(time(NULL));
+    class Square square(2,5,Lists);
+    class Rectangle Rec(2,7,Lists);
+    class Triangle Trig(2,3,Lists);
+    double WeightFull = 0,AreaFull = 0;
+    for (auto list : Lists) {
+        list->VivodInf();
+        WeightFull+=list->WeightM();
+        AreaFull+=list->AreaFull();
+    }
+    cout<<"Вес всего (кг)= "<<WeightFull<<endl;
+    cout<<"Площадь всего (м^3)= "<<AreaFull<<endl;
+}
