@@ -1,0 +1,97 @@
+#include <iostream>
+#include <iso646.h>
+#include <windows.h>
+#include <vector>
+#include <string>
+#include <ctime>
+using namespace std;
+double random()
+{
+    double f = rand();
+    f = rand()%1000/1000.0;
+    return f;
+}
+class Shooters
+{
+protected:
+    string Name;
+    int Age;
+    double Experience;
+    double Probability;
+public:
+    Shooters(string Name,int Age,double Experience,double Probability):
+            Name(Name),Age(Age),Experience(Experience),Probability(Probability){
+    }
+    Shooters() = default;
+    virtual bool Shoot() = 0;
+    void VivodInf(){
+        cout<<"Имя = "<<Name<<endl;
+        cout<<"     Возраст = "<<Age<<endl;
+        cout<<"     Опыт = "<<Experience<<endl;
+    }
+};
+class Construct:public Shooters{
+public:
+    Construct(string Name,int Age,double Experience,double Probability):
+            Shooters(Name,Age,Experience,Probability){
+    }
+    bool Shoot(){
+        double as = random();
+        bool a = Probability > as;
+        if(a == true){
+            cout<<"Попал!"<<endl;
+        }else{
+            cout<<"Промазал!"<<endl;
+        }
+        return a;
+    }
+};
+class Newbie:public Shooters {
+public:
+    Newbie(string Name,int Age, double Experience, vector<Shooters*>& Shooters){
+        Probability = Experience * 0.01;
+        Construct* Square12 = new Construct(Name,Age,Experience,Probability);
+        Shooters.push_back(Square12);
+    }
+    bool Shoot() override{
+    }
+};
+class Experienced:public Shooters {
+public:
+    Experienced(string Name,int Age, double Experience, vector<Shooters*>& Shooters){
+        Probability = Experience * 0.05;
+        Construct* Square12 = new Construct(Name,Age,Experience,Probability);
+        Shooters.push_back(Square12);
+    }
+    bool Shoot() override{
+    }
+};
+class Veteran:public Shooters {
+public:
+    Veteran(string Name,int Age, double Experience, vector<Shooters*>& Shooters){
+        Probability = 0.9 - 0.01*Age;
+        Construct* Square12 = new Construct(Name,Age,Experience,Probability);
+        Shooters.push_back(Square12);
+    }
+    bool Shoot() override{
+    }
+};
+int main()
+{
+    srand(time(0));
+    SetConsoleOutputCP(CP_UTF8);
+    vector<Shooters*> Shooters;
+    class Newbie Gat("Дима", 23,2,Shooters);
+    class Experienced Gat1("Максим", 32,10,Shooters);
+    class Veteran Gat12("Александр", 45,23,Shooters);
+    class Experienced Gat13("Ярослав", 34,12,Shooters);
+    class Newbie Gat14("Егор", 25,4,Shooters);
+    for (auto Shooters : Shooters) {
+        Shooters->VivodInf();
+        bool a=Shooters->Shoot();
+        if(a== true){
+            cout<<"Stop"<<endl;
+            break;
+        }
+    }
+}
