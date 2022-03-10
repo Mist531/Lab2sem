@@ -1,0 +1,103 @@
+#include <iostream>
+#include <iso646.h>
+#include <windows.h>
+#include <vector>
+#include <string>
+#include <ctime>
+using namespace std;
+double random()
+{
+    double f = rand();
+    f = rand()%1000/1000.0;
+    return f;
+}
+class Shooters
+{
+protected:
+    string Name;
+    int Age;
+    double Experience;
+    double Probability;
+public:
+    Shooters(string Name,int Age,double Experience):
+    Name(Name),Age(Age),Experience(Experience){
+    }
+    Shooters() = default;
+    virtual bool Shoot() = 0;
+    void VivodInf(){
+        cout<<"Имя = "<<Name<<endl;
+        cout<<"     Возраст = "<<Age<<endl;
+        cout<<"     Опыт = "<<Experience<<endl;
+    }
+};
+class Newbie:public Shooters {
+public:
+    Newbie(string Name,int Age,double Experience):
+    Shooters(Name,Age,Experience){
+        Probability = Experience * 0.01;
+    }
+    bool Shoot() override{
+        double as = random();
+        bool a = Probability > as;
+        if(a == true){
+            cout<<"Попал!"<<endl;
+        }else{
+            cout<<"Промазал!"<<endl;
+        }
+        return a;
+    }
+};
+class Experienced:public Shooters {
+public:
+    Experienced(string Name,int Age,double Experience):
+    Shooters(Name,Age,Experience){
+        Probability = Experience * 0.05;
+    }
+    bool Shoot() override{
+        double as = random();
+        bool a = Probability > as;
+        if(a == true){
+            cout<<"Попал!"<<endl;
+        }else{
+            cout<<"Промазал!"<<endl;
+        }
+        return a;
+    }
+};
+class Veteran:public Shooters {
+public:
+    Veteran(string Name,int Age,double Experience):
+    Shooters(Name,Age,Experience){
+        Probability = 0.9 - 0.01*Age;
+    }
+    bool Shoot() override{
+        double as = random();
+        bool a = Probability > as;
+        if(a == true){
+            cout<<"Попал!"<<endl;
+        }else{
+            cout<<"Промазал!"<<endl;
+        }
+        return a;
+    }
+};
+int main()
+{
+    srand(time(0));
+    SetConsoleOutputCP(CP_UTF8);
+    Shooters* Shooters[5] = {
+            new Newbie("Дима", 23, 2),
+            new Experienced("Максим", 32, 10),
+            new Veteran("Александр", 45, 23),
+            new Experienced("Ярослав", 34, 12),
+            new Newbie("Егор", 25, 4)
+    };
+    for (auto Shooters : Shooters) {
+        Shooters->VivodInf();
+        bool a=Shooters->Shoot();
+        if(a== true){
+            cout<<"Stop"<<endl;
+            break;
+        }
+    }
+}
