@@ -1,0 +1,112 @@
+#include <iostream>
+#include <windows.h>
+#include <string>
+using namespace std;
+class List
+{
+protected:
+    double Length;
+    double Width;
+    double Thickness;
+    double Density = 7.9;
+    double Weight;
+    double Area;
+    string Type;
+public:
+    List(double Length1):Length(Length1){}
+    List() = default;
+    virtual double Area1() = 0;
+    double AreaFull(){
+        return Area;
+    }
+    double WeightM(){
+        Weight = Density * Area * (Length / 100);
+        return Weight;
+    }
+    void VivodInf(){
+        cout<<"Тип листа = "<<Type<<endl;
+        if (Type == "Треугольник"){
+            cout << "     Катет 1 (мм)= " << Length << endl;
+            cout << "     Катет 2 (мм)= " << Width << endl;
+        }
+        else {
+            cout << "     Длинна (мм)= " << Length << endl;
+            cout << "     Ширина (мм)= " << Width << endl;
+        }
+        cout<<"     Толщина (мм)= "<<Thickness<<endl;
+        cout<<"     Плотность (кг/м^3)= "<<Density<<endl;
+        cout<<"     Вес (кг)= "<<Weight<<endl;
+        cout<<"     Площадь (м^3)= "<<Area<<endl;
+    }
+};
+class Square:public List {
+public:
+    Square(int Size):List(Size){
+            Length = Size * 100+ rand() % 20+2;//мм
+            Width = Length;//мм
+            Thickness = rand() % 20+2;//мм
+            Area = Area1();//м3
+            Weight = WeightM();
+            Type = "Квадрат";
+    }
+    double Area1() override {
+        Area = (Length/100) * (Width/100);
+        return Area;
+    }
+};
+class Rectanglee:public List {
+public:
+    Rectanglee(int Size) {
+        Length = Size * 100+ rand() % 20+2;//мм
+        Width = Size * 100+ rand() % 20+2;//мм
+        Thickness = rand() % 20+2;//мм
+        Area = Area1();//м3
+        Weight = WeightM();
+        Type = "Прямоугольник";
+    }
+    double Area1() override {
+        Area = (Length/100) * (Width/100);
+        return Area;
+    }
+};
+class Triangle:public List {
+public:
+    Triangle(int Size) {
+        Length = Size * 100+ rand() % 20+2;//мм
+        Width = Size * 100+ rand() % 20+2;//мм
+        Thickness = rand() % 20+2;//мм
+        Area = Area1();//м3
+        Weight = WeightM();
+        Type = "Треугольник";
+    }
+    double Area1() override {
+        Area = ((Length/100) * (Width/100))/2;
+        return Area;
+    }
+};
+void InitArray(List* Listr[],int a,int a1,int a2){
+    for (int i=0; i<a;i++){
+        Listr[i] = new Square(2);
+    }
+    for (int i=a; i<a+a1;i++){
+        Listr[i] = new Rectanglee(2);
+    }
+    for (int i=a+a1; i<a+a1+a2;i++){
+        Listr[i] = new Triangle(2);
+    }
+}
+int main()
+{
+    SetConsoleOutputCP(CP_UTF8);
+    srand(time(NULL));
+    List* Listr[15];
+    InitArray(Listr,5,7,3);
+    double WeightFull = 0,AreaFull = 0;
+    for (auto List : Listr) {
+        List->VivodInf();
+        WeightFull+=List->WeightM();
+        AreaFull+=List->AreaFull();
+    }
+    cout<<"Вес всего (кг)= "<<WeightFull<<endl;
+    cout<<"Площадь всего (м^3)= "<<AreaFull<<endl;
+}
